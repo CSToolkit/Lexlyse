@@ -112,6 +112,7 @@
     font-size:13.5px;
     font-family:inherit;
   }
+  button{font-family:inherit;}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
   .field{margin-bottom:14px;}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
@@ -663,11 +664,11 @@
     <h2 class="section-title">Entities</h2>
     <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">The client companies and LLPs your <span onclick="document.querySelector('[data-view=workspace]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">team workspace</span> tracks compliances for &mdash; shared with everyone in the workspace.</p>
 
-    <div id="entNoWorkspace" style="text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
+    <div id="entNoWorkspace" style="display:none;text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
       Join or create a <span onclick="document.querySelector('[data-view=workspace]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">team workspace</span> first &mdash; entities are shared per workspace.
     </div>
 
-    <div id="entActive" style="display:none;">
+    <div id="entActive" style="display:block;">
       <div class="row">
         <div class="field">
           <label>Entity name</label>
@@ -702,11 +703,11 @@
     <h2 class="section-title">Compliance tracker</h2>
     <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">Per-entity compliance tasks, shared with your team workspace &mdash; add a filing, track its status, and see what's overdue at a glance.</p>
 
-    <div id="trkNoWorkspace" style="text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
+    <div id="trkNoWorkspace" style="display:none;text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
       Join or create a <span onclick="document.querySelector('[data-view=workspace]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">team workspace</span> first &mdash; the tracker is shared per workspace.
     </div>
 
-    <div id="trkActive" style="display:none;">
+    <div id="trkActive" style="display:block;">
       <div id="trkReminders"></div>
 
       <div class="grid" style="margin-bottom:22px;">
@@ -771,11 +772,11 @@
     <h2 class="section-title">Workflow Board</h2>
     <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">Drag a task between columns to update its status &mdash; same tasks as the <span onclick="document.querySelector('[data-view=tracker]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">Compliance tracker</span>, shared with your workspace.</p>
 
-    <div id="kanNoWorkspace" style="text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
+    <div id="kanNoWorkspace" style="display:none;text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
       Join or create a <span onclick="document.querySelector('[data-view=workspace]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">team workspace</span> first &mdash; the board is shared per workspace.
     </div>
 
-    <div id="kanActive" style="display:none;">
+    <div id="kanActive" style="display:block;">
       <div class="row" style="margin-bottom:16px;">
         <div class="field">
           <label>Filter by entity</label>
@@ -792,11 +793,11 @@
     <h2 class="section-title">Task calendar</h2>
     <p style="color:var(--text-dim);font-size:13px;margin-bottom:18px;">Month view of your workspace's compliance tasks, colour-coded by priority &mdash; not to be confused with the static <span onclick="document.querySelector('[data-view=calendar]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">Compliance calendar</span> reference table.</p>
 
-    <div id="calNoWorkspace" style="text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
+    <div id="calNoWorkspace" style="display:none;text-align:center;padding:50px 20px;color:var(--text-faint);font-size:13px;">
       Join or create a <span onclick="document.querySelector('[data-view=workspace]').click()" style="color:var(--gold-bright);cursor:pointer;text-decoration:underline;">team workspace</span> first &mdash; this calendar is shared per workspace.
     </div>
 
-    <div id="calActive" style="display:none;">
+    <div id="calActive" style="display:block;">
       <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
         <button style="background:transparent;border:1px solid var(--card-border,#2a2a3a);color:var(--text-dim);padding:6px 12px;" onclick="calShiftMonth(-1)">&larr; Prev</button>
         <h3 id="calMonthLabel" style="font-size:15px;min-width:150px;text-align:center;">&mdash;</h3>
@@ -3196,16 +3197,8 @@ function wsShowState(state){
   wsSyncEntTrkVisibility(state === 'active');
 }
 function wsSyncEntTrkVisibility(isActive){
-  const ids = ['entNoWorkspace','entActive','trkNoWorkspace','trkActive','kanNoWorkspace','kanActive','calNoWorkspace','calActive'];
-  if (!ids.every(id => document.getElementById(id))) return;
-  document.getElementById('entNoWorkspace').style.display = isActive ? 'none' : '';
-  document.getElementById('entActive').style.display = isActive ? '' : 'none';
-  document.getElementById('trkNoWorkspace').style.display = isActive ? 'none' : '';
-  document.getElementById('trkActive').style.display = isActive ? '' : 'none';
-  document.getElementById('kanNoWorkspace').style.display = isActive ? 'none' : '';
-  document.getElementById('kanActive').style.display = isActive ? '' : 'none';
-  document.getElementById('calNoWorkspace').style.display = isActive ? 'none' : '';
-  document.getElementById('calActive').style.display = isActive ? '' : 'none';
+  // Entities, Compliance tracker, Workflow board, and Task calendar are always
+  // shown now, regardless of workspace state — no more "join a workspace first" gate.
   const navBadge = document.getElementById('trkNavBadge');
   if (navBadge && !isActive) navBadge.style.display = 'none';
 }
@@ -3303,7 +3296,8 @@ function wsListenNotes(wsId, myRole){
     let html = '';
     snap.forEach(d => {
       const n = d.data();
-      html += `<div class="result-row"><span class="label">${n.text}</span><span class="value" style="font-size:11px;color:var(--text-faint);font-weight:400;">${n.by || ''}</span></div>`;
+      const delBtn = myRole === 'admin' ? `<button style="margin-left:8px;font-size:10.5px;" onclick="wsDeleteNote('${wsId}','${d.id}')">Delete</button>` : '';
+      html += `<div class="result-row"><span class="label">${n.text}</span><span class="value" style="font-size:11px;color:var(--text-faint);font-weight:400;">${n.by || ''}${delBtn}</span></div>`;
     });
     document.getElementById('wsNotesList').innerHTML = html || '<p style="color:var(--text-faint);font-size:13px;">No notes yet.</p>';
     const input = document.getElementById('wsNoteInput');
@@ -3312,6 +3306,10 @@ function wsListenNotes(wsId, myRole){
     if (btn) btn.disabled = (myRole === 'viewer');
   });
 }
+window.wsDeleteNote = async function(wsId, noteId){
+  if (!confirm('Delete this note?')) return;
+  await fs.deleteDoc(fs.doc(db, 'workspaces', wsId, 'notes', noteId));
+};
 
 function wsListenFiles(wsId, myRole){
   if (unsubFiles) unsubFiles();
